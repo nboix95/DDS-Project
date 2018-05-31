@@ -1,3 +1,3 @@
 # DDS-Project
 
-Aquest es un analisi molt molon!
+	He de comencar ja!

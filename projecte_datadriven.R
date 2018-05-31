@@ -9,7 +9,7 @@ subDir <- "DownloadedData"
 
 dir.create(file.path(mainDir, subDir))
 setwd(paste(mainDir,subDir, sep = '/'))
-
+downloadsDirectory <- getwd()
 
 font <- "http://dns-bh.sagadc.org/"
 links <- readLines(font)
@@ -37,7 +37,18 @@ full_links_filtered <- full_links[iters]
 any(grepl("zip", full_links_filtered))
 
 sapply(full_links_filtered, function(link) {
-  download.file(url = link, destfile = paste(getwd(),basename(link),sep = "/") )
+  download.file(url = link, destfile = paste(downloadsDirectory,basename(link),sep = "/") )
+})
+file.remove("test.txt")
+file.remove("freewebhosts.txt")
+file.remove("pushdo.txt")
+file.remove("domains.txt")
+
+downloaded_files <- list.files(downloadsDirectory)
+file2read <- downloaded_files[[1]]
+
+sapply(downloaded_files, function(file2read){
+  df <- read.table(paste(downloadsDirectory,file2read, sep = "/"), col.names = c("domain", "date"), stringsAsFactors = F)
 })
 
 
