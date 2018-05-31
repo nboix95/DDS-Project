@@ -46,13 +46,32 @@ file.remove("domains.txt")
 
 downloaded_files <- list.files(downloadsDirectory)
 file2read <- downloaded_files[[1]]
-
+##################################################################################
+#################AREA DE PROVES###################################################
 sapply(downloaded_files, function(file2read){
-  df <- read.table(paste(downloadsDirectory,file2read, sep = "/"), col.names = c("domain", "date"), stringsAsFactors = F)
+  df2 <-read.csv(file = paste(downloadsDirectory,file2read, sep = "/"), sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin", "1", "2", "3", "4"), stringsAsFactors = F)
 })
 
+lapply(downloaded_files, function(file2read){
+  full_name_file <- paste(downloadsDirectory, file2read, sep = "/")
+  df2 <- read.csv(file = full_name_file, sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin", "1", "2", "3"), stringsAsFactors = F)
+})
 
+downloaded_files_full <- paste(downloadsDirectory,downloaded_files,sep = "")
+df3 <- lapply(file = downloaded_files_full, read.csv(), sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin", stringsAsFactors = F))
+
+
+sapply(downloaded_files, function(file2read){
+  full_name_file <- paste(downloadsDirectory, file2read, sep = "/")
+  df2 <- read.csv(file = full_name_file, sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin"), stringsAsFactors = F) 
+})
+
+df2 <-read.csv(file = paste(downloadsDirectory,file2read, sep = "/"), sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin", "1", "2", "3", "4"), stringsAsFactors = F)
+
+?read.csv
 df <- read.table(paste(getwd(),"20150825.txt", sep = "/"), col.names = c("domain", "date"), stringsAsFactors = F)
+##################################################################################################
+#####################################################################################################
 df$date <- as.Date(as.character(df$date), "%Y%m%d") 
 
 
