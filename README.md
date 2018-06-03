@@ -18,7 +18,7 @@ Definición del conjunto de los datos:
 Objetivos principales: 
 
 1. Relacionar el **grado** de **vulnerabilidad** de una **web** por su categoría. 
-2. Relacionar qué **países** son los más **atacados**, en cuanto a webs, en cada mes del año.
+2. Relacionar qué **países** son los más **atacados**, en cuanto a webs, en cada mes del año-> rworldmap (hecho), falta juntar todos los datos (probado solo con algunas IP)
 3. Qué **proveedores** suelen ser los **más vulnerables**. 
 4. Establecer en qué **épocas del año** suelen haber **más phishings**.
 
