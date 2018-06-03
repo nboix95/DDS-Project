@@ -72,11 +72,21 @@ mainDataFrame <- do.call("rbind", lapply(downloaded_files, function(file2read){
   read.csv(file = paste(downloadsDirectory, file2read, sep = "/"), sep = "", header = F, fill = T, stringsAsFactors = F, col.names = c("domain", "type", "origin", "date", "1", "2", "3"))
 }))
 
+#Agafa la ultima columna NO N/A i la posa a Data
+mainDataFrame$date <- apply(mainDataFrame, 1, function(x) tail(na.omit(x), 1))
+
 #defineix la columna de la data com a tipus data
-df$date <- as.Date(as.character(df$date), "%Y%m%d") 
+mainDataFrame$date <- as.Date(as.character(mainDataFrame$date), "%Y%m%d") 
+
+#Borra les columnes sobrants
+mainDataFrame[5:7] <- list(NULL)
+
+#Borra linies mal formatejades buscant un "origin" o una "data" buit
+mainDataFrame <- mainDataFrame[!(mainDataFrame$origin==""),]
+mainDataFrame <- mainDataFrame[!(is.na(mainDataFrame$date)),]
 
 #busca la IP del hostname cridant a la funcio hostname_to_ip amb la columna domain del dataframe
-df$ip <- hostname_to_ip(df$domain)
+mainDataFrame$ip <- hostname_to_ip(mainDataFrame$domain)
 
 #deixa nomes la primera IP de cada domini si hi ha mes de una
-df$ip2 <- sapply(df$ip, '[[', 1)
+mainDataFrame$ip <- sapply(mainDataFrame$ip, '[[', 1)
