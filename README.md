@@ -6,7 +6,7 @@ Fuente de datos-->http://www.malwaredomains.com/.
 
 Definición del conjunto de los datos:
 
-- **Domain**: dominio del cual pertenecen. 
+- **Domain**: dominio al cual pertenecen. 
 - **Fecha**: fecha en el que se realizó el ataque.
 - **Categoría**: tipo de página web (venta de comida, ropa, automóviles...) 
 - **IP**
@@ -21,3 +21,7 @@ Objetivos principales:
 2. Relacionar qué **países** son los más **atacados**, en cuanto a webs, en cada mes del año.
 3. Qué **proveedores** suelen ser los **más vulnerables**. 
 4. Establecer en qué **épocas del año** suelen haber **más phishings**.
+
+Objetivo modelo estadístico: 
+
+En base a las características comentadas anteriormente, definir qué probabilidad hay que una web pueda ser vulnerada, jugando con el porcentaje de casos extraido de las cuestiones anteriores. 
