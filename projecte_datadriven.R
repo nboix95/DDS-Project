@@ -112,11 +112,11 @@ dfIP <- dfIP1[, ! names(dfIP1) %in% cols.dont.want, drop = F]
 library(data.table)
 setnames(dfIP, old=c("city_name","country_name"), new=c("Cities", "Countries"))
 
-#Unimos data frame: dfIP con dftest en dftest1--> para juntar TODOS LOS DATOS*****
+#Unimos data frame: dfIP con dftest en dftest1--> para juntar TODOS LOS DATOS
 dftest1 = cbind(dftest, IP)
 View (dftest1)
 
-# en el mapa se usará finalmente con el dframe de TODOS LOS DATOS*****
+#data frame: dfIP para el mapa
 #Mostrar en mapa las IP: rworldmap vignette
 library(rworldmap)
 par(mai=c(0,0,0.2,0), xaxs="i", yaxs="i")
@@ -131,8 +131,11 @@ mapCountryData(sPDF,
                oceanCol = 'lightblue',
                missingCountryCol = 'white')
 
+#Proveedor IP (whois): domaintools-> se tiene que pagar 100 euros...
+#install.packages("devtools")
+#devtools::install_github("hrbrmstr/domaintools")
+#library(domaintools) 
 
-
-
-
-
+#histograma tiempo--> falta contab. (en proceso)
+library(datasets)
+hist(dftest1$date)
