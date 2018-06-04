@@ -90,3 +90,9 @@ mainDataFrame$ip <- hostname_to_ip(mainDataFrame$domain)
 
 #deixa nomes la primera IP de cada domini si hi ha mes de una
 mainDataFrame$ip <- sapply(mainDataFrame$ip, '[[', 1)
+
+#guarda el dataframe a un arxiu local
+save(mainDataFrame,file = "mainDataframe.Rda")
+
+testframe <- mainDataFrame[dim(mainDataFrame)[1]:1,]
+save(testframe, file = "testframe.Rda")
