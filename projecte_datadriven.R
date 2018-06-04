@@ -1,4 +1,4 @@
-#Instalación de paquetes necesarios
+#Instalaciï¿½n de paquetes necesarios
 install.packages("iptools")
 install.packages("stringr")
 
@@ -6,16 +6,16 @@ install.packages("stringr")
 library(iptools)
 library(stringr)
 
-#Asignación variables para working directory y DownloaodedData.
+#Asignaciï¿½n variables para working directory y DownloaodedData.
 mainDir <- getwd()
 subDir <- "DownloadedData"
 
-dir.create(file.path(mainDir, subDir)) #creación carpeta "DownloadedData" al main directory
+dir.create(file.path(mainDir, subDir)) #creaciï¿½n carpeta "DownloadedData" al main directory
 setwd(paste(mainDir,subDir, sep = '/')) #set del working directori de la carpeta
 downloadsDirectory <- getwd() #guardar en la variable downloadsDirectory
 
 
-fuente <- "http://dns-bh.sagadc.org/" #asignación URL a la variable "fuente"
+fuente <- "http://dns-bh.sagadc.org/" #asignaciï¿½n URL a la variable "fuente"
 links1 <- readLines(fuente) #lee cada linea de la "fuente" y la asigna a "links1".
 
 patron <- 'href=\\"([[:alnum:]\\.]*)' #regex para detectar enlaces
@@ -33,26 +33,26 @@ links3 <- str_remove(links2,'href=\"') #eliminar "href=\" de links2 y guardar en
 #  paste(font, link, sep="/")
 #})
 
-#Iteración para links3: añadir la URL base para que devuelva las URL's completas en formato correcto
+#Iteraciï¿½n para links3: aï¿½adir la URL base para que devuelva las URL's completas en formato correcto
 full_links <- sapply(links3, function(link){
   paste(fuente, link, sep="")
 })
 
-#Búsqueda patrón "txt" en el vector full_links, devolviendo un vector de "True/False"
+#Bï¿½squeda patrï¿½n "txt" en el vector full_links, devolviendo un vector de "True/False"
 iters <- grepl(pattern = "txt", x = full_links)
 
 #Guardar los links con "txt" en la variable "full_links_filtered"
 full_links_filtered <- full_links[iters]
 
-#Eliminar links que contengan la extensión "zip"
+#Eliminar links que contengan la extensiï¿½n "zip"
 any(grepl("zip", full_links_filtered))
 
-#Iteración para descargar todos los archivos de "full_links_filtered" y guardarlos al working directory
+#Iteraciï¿½n para descargar todos los archivos de "full_links_filtered" y guardarlos al working directory
 sapply(full_links_filtered, function(link) {
   download.file(url = link, destfile = paste(downloadsDirectory,basename(link),sep = "/") )
 })
 
-#Borrar archivos innecesários
+#Borrar archivos innecesï¿½rios
 file.remove("test.txt")
 file.remove("freewebhosts.txt")
 file.remove("pushdo.txt")
@@ -64,42 +64,35 @@ downloaded_files <- list.files(downloadsDirectory)
 #Guardar el primer archivo de downloaded_files en "file2read"
 file2read <- downloaded_files[[1]]
 
-#Leer todos los archivos(sapply o lapply) y añadirlos al dataframe
-##################################################################################
-#################AREA DE PROVES###################################################
-sapply(downloaded_files, function(file2read){
-  df2 <-read.csv(file = paste(downloadsDirectory,file2read, sep = "/"), sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin", "1", "2", "3", "4"), stringsAsFactors = F)
-})
+#combina tots els arxius en un mateix dataframe en 7 columnes
+mainDataFrame <- do.call("rbind", lapply(downloaded_files, function(file2read){
+  read.csv(file = paste(downloadsDirectory, file2read, sep = "/"), sep = "", header = F, fill = T, stringsAsFactors = F, col.names = c("domain", "type", "origin", "date", "1", "2", "3"))
+}))
 
-lapply(downloaded_files, function(file2read){
-  full_name_file <- paste(downloadsDirectory, file2read, sep = "/")
-  df2 <- read.csv(file = full_name_file, sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin", "1", "2", "3"), stringsAsFactors = F)
-})
+#Agafa la ultima columna NO N/A i la posa a Data
+mainDataFrame$date <- apply(mainDataFrame, 1, function(x) tail(na.omit(x), 1))
 
-downloaded_files_full <- paste(downloadsDirectory,downloaded_files,sep = "")
-df3 <- lapply(file = downloaded_files_full, read.csv(), sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin", stringsAsFactors = F))
+#defineix la columna de la data com a tipus data
+mainDataFrame$date <- as.Date(as.character(mainDataFrame$date), "%Y%m%d") 
 
+#Borra les columnes sobrants
+mainDataFrame[5:7] <- list(NULL)
 
-sapply(downloaded_files, function(file2read){
-  full_name_file <- paste(downloadsDirectory, file2read, sep = "/")
-  df2 <- read.csv(file = full_name_file, sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin"), stringsAsFactors = F) 
-})
+#Borra linies mal formatejades buscant un "origin" o una "data" buit
+mainDataFrame <- mainDataFrame[!(mainDataFrame$origin==""),]
+mainDataFrame <- mainDataFrame[!(is.na(mainDataFrame$date)),]
 
-df2 <-read.csv(file = paste(downloadsDirectory,file2read, sep = "/"), sep = "", header = FALSE, fill = TRUE, col.names = c("domain", "date", "type", "origin", "1", "2", "3", "4"), stringsAsFactors = F)
+#busca la IP del hostname cridant a la funcio hostname_to_ip amb la columna domain del dataframe
+mainDataFrame$ip <- hostname_to_ip(mainDataFrame$domain)
 
-?read.csv
-dftest<- read.table(paste(getwd(),"20150825.txt", sep = "/"), col.names = c("domain", "date"), stringsAsFactors = F)
-##################################################################################################
-#####################################################################################################
+#deixa nomes la primera IP de cada domini si hi ha mes de una
+mainDataFrame$ip <- sapply(mainDataFrame$ip, '[[', 1)
 
-#Definir la columna de la fecha como tipo fecha para obtener el formato YYYY/MM/D.
-dftest$date <- as.Date(as.character(dftest$date), "%Y%m%d") 
+#guarda el dataframe a un arxiu local
+save(mainDataFrame,file = "mainDataframe.Rda")
 
-#Búsqueda de la IP del hostname, a través de la columna domain del Dataframe, mediante la función hostname_to_ip
-dftest$ip <- hostname_to_ip(dftest$domain)
-
-#Para los casos que un dominio tenga más de una IP, guardar solo la primera.
-dftest$ip2 <- sapply(dftest$ip, '[[', 1)
+testframe <- mainDataFrame[dim(mainDataFrame)[1]:1,]
+save(testframe, file = "testframe.Rda")
 
 
 
