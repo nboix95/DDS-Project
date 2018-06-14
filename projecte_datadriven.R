@@ -124,10 +124,9 @@ par(mai=c(0,0,0.2,0), xaxs="i", yaxs="i")
 #Adjuntar los datos al country map
 sPDF<- joinCountryData2Map(mainDFIP,
                           joinCode = "NAME",
-                          nameJoinColumn ="Countries" )
+                          nameJoinColumn ="Countries")
 #mapping
 mapCountryData(sPDF, 
-               nameColumnToPlot = "Countries",
                mapTitle = 'Country risk',
                oceanCol = 'lightblue',
                missingCountryCol = 'white')
@@ -137,6 +136,23 @@ mapCountryData(sPDF,
 #devtools::install_github("hrbrmstr/domaintools")
 #library(domaintools) 
 
-#histograma tiempo--> falta contab. (en proceso)
-library(datasets)
-hist(dftest1$date)
+#Contar num de veces que se repite cada país
+install.packages("plyr")
+library(plyr)
+resultsIP<-na.omit(results)
+x = count(resultsIP, 'Countries')
+
+#Contar cuantas webs vulneradas hay por mes y año
+fechas=as.Date(mainDFIP$date)
+Año <-format(fechas,"%Y%m")
+xtiempo <- as.data.frame(Año)
+dfañomes = count(xtiempo, "Año")
+
+
+
+#Contar frecuencia de tiempo
+tiempo = count(mainDataFrame, 'date')
+#Histograma tiempo
+#library(datasets)
+#hist(tiempo$freq)
+
