@@ -84,6 +84,7 @@ mainDataFrame <- mainDataFrame[!(is.na(mainDataFrame$date)),]
 
 #Buscar la IP del hostname (columna domain del dataframe) usando la función hostname_to_ip
 mainDataFrame$ip <- hostname_to_ip(mainDataFrame$domain)
+totalIP <- as.data.frame(hostname_to_ip(mainDataFrame$domain))
 
 #En caso de que haya más de una IP, dejar la primera
 mainDataFrame$ip <- sapply(mainDataFrame$ip, '[[', 1)
@@ -143,10 +144,10 @@ resultsIP<-na.omit(results)
 x = count(resultsIP, 'Countries')
 
 #Contar cuantas webs vulneradas hay por mes y año
-fechas=as.Date(mainDFIP$date)
+fechas=as.Date(mainDataFrame$date)
 Año <-format(fechas,"%Y%m")
 xtiempo <- as.data.frame(Año)
-dfañomes = count(xtiempo, "Año")
+dfyearmonth = count(xtiempo, "Año")
 
 
 
@@ -156,3 +157,9 @@ tiempo = count(mainDataFrame, 'date')
 #library(datasets)
 #hist(tiempo$freq)
 
+#Histograma tiempo con estimador de núcleo de la densidad
+library(datasets)
+hist(dfyearmonth$freq,freq=FALSE,col="lightcyan", ylim=c(0,0.0003),main="Histograma de ataques",xlab="")
+lines(density(dfyearmonth$freq),col="red",lwd=2)
+
+#hist(tiempo$freq)
