@@ -1,0 +1,76 @@
+---
+title: "Prácitca DDS"
+output: html_document
+---
+##### Data Driven Security - ed. 7 Master in Cybersecurity Management - UPC School
+##### Autores: Dídac Caminero García y Neus Boix Colomer
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Definición de la pregunta
+En este proyecto, se ha establecido como punto de partida, qué caracterísitcas son las principales para detectar que una web pueda ser vulnerada.
+
+A partir de aquí, se han realizado varias búsquedas de bases de datos, hasta dar con la fuente de datos definitiva: http://www.malwaredomains.com/. En esta se han encontrado ficheros donde aparecen webs vulneradas en estos tres últimos años, la mayoría de ellas a causa de phishing. 
+
+
+```{r cars}
+summary(cars)
+```
+
+## Definición del conjunto de los datos
+
+A la hora de definir el conjunto de datos, se han pensado qué tipo de información es interesante para determinar las propiedades de una página web. Esta se define en los siguientes puntos: 
+
+- **Domain**: dominio del cual pertenecen. 
+- **Fecha**: fecha en el que se realizó el ataque.
+- **Categoría**: tipo de página web (venta de comida, ropa, automóviles...)
+- **IP**
+- **Proveedor**
+- **Origen**: país de donde proceden.
+- **Tipología servidor**
+- **Autor dominio**
+
+## Determinación de los datos accesibles
+
+Una vez se han definido los datos, se ha establecido una relación entre ellos, para así poder aplicar un modelo estadísitico lo más exacto posible. 
+
+Los objetivos principales son: 
+
+1. Relacionar el **grado** de **vulnerabilidad** de una **web** por su categoría. 
+2. Relacionar qué **países** son los más **atacados**, en cuanto a webs, en cada mes del año.
+3. Qué **proveedores** suelen ser los **más vulnerables**. 
+4. Establecer en qué **épocas del año** suelen haber **más phishings**.
+
+## Obtención de los datos
+
+A continuación, se describen los pasos que se han llevado a cabo para la obtención de los datos. 
+
+En primer lugar, se han instalado las siguientes librerias: 
+
+Package | Description
+------- | -----------
+iptools | Obtención de la IP de un dominio
+stringr | Operaciones con diferentes tipologias de caracteres
+rworldmap | geolocalización de las IP's
+domaintools | extracción los proveedores de las IP's
+
+## Datos elegantes
+
+
+## Análisis de exploración de datos
+## Modelos estadísticos
+
+## Interpretación de los resultados
+### Gráficos
+## Obtención de la respuesta a la pregunta
+## Descripción del proceso y resultados
+## Código
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
