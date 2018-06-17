@@ -4,6 +4,7 @@ install.packages("stringr")
 install.packages("rgeolocate")
 install.packages("data.table")
 install.packages("plyr")
+install.packages("ggplot2")
 
 
 #Cargar las librerias necesarias
@@ -13,6 +14,7 @@ library(rgeolocate)
 library(data.table)
 library(plyr)
 library(datasets)
+library(ggplot2)
 
 #Asignacion variables para working directory y DownloaodedData.
 mainDir <- getwd()
@@ -136,12 +138,17 @@ dfyearmonth = count(xtiempo, "Año")
 #Contar frecuencia de tiempo (por día)
 tiempo = count(mainDataFrame, 'date')
 
-#Histograma tiempo con estimador de núcleo de la densidad
-hist(dfyearmonth$freq,freq=FALSE,col="lightcyan", ylim=c(0,0.0003),main="Histograma de ataques",xlab="")
-lines(density(dfyearmonth$freq),col="red",lwd=2)
-
-#Otro histograma: 
-hist(dfañomes$freq, main="Histograma de ataques respecto al tiempo", col=1:10, breaks=41)
-
 #tabla
 barplot(prop.table(table(mainDataFrame$date)), main = "Histograma de ataques diarios 2013-2018", ylim = c(0,0.012))
+
+#domaintools | extracción los proveedores de las IP's
+
+#geombar
+install.packages("plotly")
+library(plotly)
+devtools::install_github('hadley/ggplot2')
+
+p <- ggplot(data=x, aes(x=freq, y=Countries)) +
+  geom_bar(stat="identity")
+
+p <- ggplotly(p)
