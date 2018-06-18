@@ -1,0 +1,244 @@
+<<<<<<< HEAD
+---
+title: "Pr?citca DDS"
+output: html_document
+---
+##### Data Driven Security - ed. 7 Master in Cybersecurity Management - UPC School
+##### **GRUPO A** - Autores: D?dac Caminero Garc?a y Neus Boix Colomer
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+* 1. Introducci?n y definici?nde la pregunta
+* 2. Definici?n del conjunto de datos
+* 3. Determinaci?n de los datos accesibles
+    + 3.1 Obtenci?n de los datos
+    + 3.2 Datos elegantes
+* 4. An?lisis de exploraci?n de datos y gr?ficos
+* 5. Conclusiones
+* 6. C?digo
+
+## 1. Introducci?n y definici?n de la pregunta
+
+El objetivo de la pr?ctica es evidenciar las posibles webs vulnerables respecto su or?gen (pa?s) y ?poca del a?o.
+
+En este proyecto, se ha planteado como punto de partida, qu? caracter?sticas son las principales para detectar que una web sea propensa a ser vulnerada.
+
+A partir de aqu?, se han realizado varias b?squedas de bases de datos, hasta dar con la fuente de datos definitiva: http://www.malwaredomains.com/. En esta se han encontrado ficheros donde aparecen webs vulneradas en estos tres ?ltimos a?os, la mayor?a de ellas a causa de phishing. Para su an?lisis se ha tratado con en programa RStudio.
+
+Para la extracci?n de datos en esta p?gina se ha utilizado el package...
+
+El repositorio que se ha utilizado para la descarga y modificaci?n de datos y los c?lculos pertinentes es el Github mediante el intermediario GitKraken.
+
+En este se encuentra: el informe en Rmd, el c?digo (junto con los packages aplicados) y c?lculos intermedios de an?lisis. 
+* https://github.com/nboix95/DDS-Project
+
+## 2. Definici?n del conjunto de datos
+A la hora de definir el conjunto de datos, se han pensado qu? tipo de informaci?n es interesante para determinar las propiedades de una p?gina web. Esta se define en los siguientes puntos: 
+
+- **Domain**: dominio del cual pertenecen. 
+- **Fecha**: fecha en el que se realiz? el ataque.
+- **Categor?a**: tipo de p?gina web (venta de comida, ropa, autom?viles...)
+- **IP**
+- **Proveedor**
+- **Origen**: pa?s de donde proceden.
+- **Tipolog?a servidor**
+- **Autor dominio**
+
+## 3. Determinaci?n de los datos accesibles
+
+Una vez se han definido los datos, se ha establecido una relaci?n entre ellos, para as? poder aplicar un modelo estad?sitico lo m?s exacto posible. 
+
+Los objetivos principales son: 
+
+1. Relacionar el **grado** de **vulnerabilidad** de una **web** por su categor?a. 
+2. Relacionar qu? **pa?ses** son los m?s **atacados**, en cuanto a webs, en cada mes del a?o.
+3. Qu? **proveedores** suelen ser los **m?s vulnerables**. 
+4. Establecer en qu? **?pocas del a?o** suelen haber **m?s phishings**.
+
+### 3.1 Obtenci?n de los datos
+
+A continuaci?n, se describen los pasos que se han llevado a cabo para la obtenci?n de los datos. 
+
+En primer lugar, se han instalado las siguientes librerias: 
+
+Package | Description
+------- | -----------
+iptools | Obtenci?n de la IP de un dominio
+stringr | Operaciones con diferentes tipologias de caracteres
+rgeolocate | Geolocalizaci?n de las IP's
+data.table | Modificar tablas de las bases de datos
+plyr | Dividir, aplicar y cambiar bases de datos
+
+### 3.2 Datos elegantes
+Posteriormente, se ha descargado la pÃ¡gina web que contiene todos los enlaces a los archivos .txt que contienen los datos. Una vez descargada la pÃ¡gina, era necesario extraer todos los enlaces que llevasen a archivos .txt con un formato determinado, asÃ­ que se llevaron a cabo varios pases de regex con distintas cadenas para finalmente formar un vector de enlaces a los archivos que contienen los datos.
+
+Una vez generado el vector, se procediÃ³ a iterar sobre el mismo descargando cada archivo y metiendo cada lÃ­nea en una lÃ­nea del dataframe principal. Dado que los archivos eran texto plano con los campos separados por espacios, fuÃ© trivial parsear cada lÃ­nea para separar los datos en las columnas adecadas.
+
+FuÃ© necesario incluir mÃ¡s columnas de las necesarias ya que habÃ­a ciertos archivos que tenÃ­an un mayor nÃºmero de columnas. 
+
+Una vez todos los enlaces fueron parseados y su informaciÃ³n aÃ±adida al dataframe principal, se procediÃ³ al saneamiento de la informaciÃ³n, eliminando columnas sobrantes o mal parseadas y descartando lÃ­neas que no cumplÃ­an con los criterios de informaciÃ³n que eran necesarios para el proyecto.
+
+Teniendo asÃ­ los datos ordenados, saneados y en un formato homogÃ©neo, se pasÃ³ a iterar sobre el dataframe en busca de las IP's relacionadas con cada uno de los dominios, aÃ±adiÃ©ndolas al dataframe en una nueva columna.
+
+## 4. An?lisis de exploraci?n de datos y gr?ficos
+
+A continuaci?n se analizan los pa?ses que m?s webs han sido vulneradas a nivel
+mundial.
+
+En el siguiente mapa de calor se muestra la densidad de dichas webs. Aparentemente los paises que tienen m?s webs atacadas son EEUU y ?sia:
+
+Figura 1 - Mapa de calor de webs vulneradas
+
+imagen: ![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Mapa.png) 
+
+Se analizan cuales son los 10 paises que tienen m?s webs vulneradas. Para obtener esta relaci?n se ha calculado la frecuencia de pa?ses.
+Como conclusi?n podemos afirmar que el pa?s con m?s webs vulneradas, seg?n la fuente de datos, es EEUU.
+
+Figura 2 - Vulnerabilidades por pa?s
+
+imagen: ![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Countriesfreq.png) 
+
+
+El siguiente paso es visualizar las ?poca del a?o donde hay m?s ataques a webs.
+
+Figura 3 - Picos de ataques entre 2013 y 2018
+
+imagen: ![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Periodo ataques.png) 
+
+Figura 4 - Fechas coincidentes con la ?poca de m?s ataques
+
+
+
+
+
+## 5.Conclusiones
+
+Obtenci?n de la respuesta a la pregunta: 
+
+La relaci?n de proveedores no se ha podido llevar a cabo ya que todas las opciones que se mostraban eran de pago (con el domaintools)
+
+
+## ANEXO
+## 6. C?digo
+
+```{r cars}
+summary(cars)
+```
+=======
+---
+title: "Prácitca DDS"
+output: html_document
+---
+##### Data Driven Security - ed. 7 Master in Cybersecurity Management - UPC School
+##### **GRUPO A** - Autores: Dídac Caminero García y Neus Boix Colomer
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+* 1. Introducción y definiciónde la pregunta
+* 2. Definición del conjunto de datos
+* 3. Determinación de los datos accesibles
+    + 3.1 Obtención de los datos elegantes
+* 4. Análisis de exploración de datos y gráficos
+* 5. Conclusiones
+
+## 1. Introducción y definición de la pregunta
+
+El objetivo de la práctica es evidenciar las posibles webs vulnerables respecto su orígen (país) y época del año.
+
+En este proyecto, se ha planteado como punto de partida, qué características son las principales para detectar que una web sea propensa a ser vulnerada.
+
+A partir de aquí, se han realizado varias búsquedas de bases de datos, hasta dar con la fuente de datos definitiva: http://www.malwaredomains.com/. En esta se han encontrado ficheros donde aparecen webs vulneradas en estos tres últimos años, la mayoría de ellas a causa de phishing. Para su análisis se ha tratado con en programa RStudio.
+
+El repositorio que se ha utilizado para la descarga y modificación de datos y los cálculos pertinentes es el Github mediante el intermediario GitKraken.
+
+En este se encuentra: el informe en Rmd, el código (junto con los packages aplicados) y cálculos intermedios de análisis. 
+
+* https://github.com/nboix95/DDS-Project.
+
+## 2. Definición del conjunto de datos
+A la hora de definir el conjunto de datos, se ha pensado qué tipo de información es interesante para determinar las propiedades de una página web. Esta se define en los siguientes puntos: 
+
+- **Domain**: dominio del cual pertenecen. 
+- **Fecha**: fecha en el que se realizó el ataque.
+- **IP**: IP correspondiente a cada dominio.
+- **Proveedor**,**Tipología servidor** y **Autor dominio**: whois del dominio.
+- **Origen**: país de donde proceden.
+
+## 3. Determinación de los datos accesibles
+
+Una vez se han definido los datos, se ha establecido una relación entre ellos, para así poder aplicar un modelo estadísitico lo más exacto posible. 
+
+Los objetivos principales son: 
+
+1. Relacionar qué **países** son los más **atacados**, en cuanto a webs.
+2. Qué **proveedores** suelen ser los **más vulnerables**. 
+3. Establecer en qué **épocas del año** suelen haber **más phishings**.
+
+### 3.1 Obtención de los datos elegantes
+
+A continuación, se describen los pasos que se han llevado a cabo para la obtención de los datos. 
+
+En primer lugar, se han instalado las siguientes librerias: 
+
+Package | Description
+------- | -----------
+iptools | Obtención de la IP de un dominio
+stringr | Operaciones con diferentes tipologias de caracteres
+rgeolocate | Geolocalización de las IP's
+data.table | Modificar tablas de las bases de datos
+plyr | Dividir, aplicar y cambiar bases de datos
+ggplot2 | Creación de gráficos personalizados
+rlang | Tratar diferentes tipos de bases de datos
+plotly | Creación de gráficos interactivos
+
+Posteriormente, se ha descargado la página web que contiene todos los enlaces a los archivos .txt que contienen los datos. Una vez descargada la página, era necesario extraer todos los enlaces que llevasen a archivos .txt con un formato determinado, así que se llevaron a cabo varios pases de regex con distintas cadenas para finalmente formar un vector de enlaces a los archivos que contienen los datos.
+
+Una vez generado el vector, se procedió a iterar sobre el mismo descargando cada archivo y metiendo cada línea en una línea del dataframe principal. Dado que los archivos eran texto plano con los campos separados por espacios, fué trivial parsear cada línea para separar los datos en las columnas adecadas.
+
+Fué necesario incluir más columnas de las necesarias ya que había ciertos archivos que tenían un mayor número de columnas. 
+
+Una vez todos los enlaces fueron parseados y su información añadida al dataframe principal, se procedió al saneamiento de la información, eliminando columnas sobrantes o mal parseadas y descartando líneas que no cumplían con los criterios de información que eran necesarios para el proyecto.
+
+Teniendo así los datos ordenados, saneados y en un formato homogéneo, se pasó a iterar sobre el dataframe en busca de las IP's relacionadas con cada uno de los dominios, añadiéndolas al dataframe en una nueva columna.
+
+
+## 4. Análisis de exploración de datos y gráficos
+
+A continuación se analizan los países que más webs han sido vulneradas a nivel
+mundial.
+
+En el siguiente mapa de calor se muestra la densidad de dichas webs. Aparentemente los paises que tienen más webs atacadas son EEUU y Ásia:
+
+**Figura 1** - Mapa de calor de webs vulneradas
+
+![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Mapa.png) 
+
+Se analizan cuales son los 10 paises que tienen más webs vulneradas. Para obtener esta relación se ha calculado la frecuencia de estos. 
+
+**Figura 2** - Vulnerabilidades por país
+
+![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Countriesfreq.png) 
+
+Como conclusión se puede afirmar que el país con más webs vulneradas, según la fuente de datos, es EEUU.
+
+El siguiente paso es visualizar las época del año donde hay más ataques a webs.
+
+**Figura 3** - Picos de ataques entre 2013 y 2018
+
+![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Periodo ataques.png) 
+
+Como se observa, se distinguen 10 principales picos de máxima cantidad de ataques a webs. En el siguiente gráfico se muestra que a principios de año, Enero-Febrero, es donde más cantidad de webs son vulneradas. 
+
+**Figura 4** - Fechas coincidentes con la época de más ataques
+
+![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Picosfechas.png) 
+
+
+## 5.Conclusiones
+
+Como conclusiones y obteniendo así la respuesta a la pregunta, se puede constatar que: 
+
+1. Los paises más propensos a ser vulnerados vía webs, son: EEUU, Alemania y Reino Unido. 
+2. En cuanto los proveedores que suelen ser los más vulnerables, no se ha podido analizar ya que todas las opciones que se han presentado son de pago. El package que ofrece una extensa información sobre el whois del dominio es: domaintools.
+3. Las épocas donde suelen tener más phishings son a principios años: entre Enero y Febrero.
+>>>>>>> devel
