@@ -141,14 +141,23 @@ tiempo = count(mainDataFrame, 'date')
 #tabla
 barplot(prop.table(table(mainDataFrame$date)), main = "Histograma de ataques diarios 2013-2018", ylim = c(0,0.012))
 
-#domaintools | extracción los proveedores de las IP's
+#domaintools | extracción los proveedores de las IP's -> todas son de pago
+
+#10 primeros paises de maximas webs vulneradas 
+diezpaises <- subset(x, freq>100)
+diezpaises #se observa que Estados Unidos y Reino Unido son los países más afectados
 
 #geombar
+install.packages("rlang")
+library(rlang)
 install.packages("plotly")
 library(plotly)
 devtools::install_github('hadley/ggplot2')
 
-p <- ggplot(data=x, aes(x=freq, y=Countries)) +
+.rs.restartR() #para restaurar la sesión
+
+p <- ggplot(data=diezpaises, aes(x=Countries, y=freq)) +
   geom_bar(stat="identity")
 
 p <- ggplotly(p)
+p #muestra gráfico
