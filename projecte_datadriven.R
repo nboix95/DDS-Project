@@ -163,8 +163,3 @@ tiempo = count(mainDataFrame, 'date')
 diezfechas <- subset(tiempo, freq>810)
 diezfechas
 barplot(diezfechas$freq, names.arg = diezfechas$date, width = 0.6, main = "Picos máximos de ataques diarios 2013-2018", ylim = c(0,1500))
-
-
-
-
-
