@@ -14,7 +14,6 @@ knitr::opts_chunk$set(echo = TRUE)
     + 3.2 Datos elegantes
 * 4. Análisis de exploración de datos y gráficos
 * 5. Conclusiones
-* 6. Código
 
 ## 1. Introducción y definición de la pregunta
 
@@ -29,19 +28,17 @@ Para la extracción de datos en esta página se ha utilizado el package...
 El repositorio que se ha utilizado para la descarga y modificación de datos y los cálculos pertinentes es el Github mediante el intermediario GitKraken.
 
 En este se encuentra: el informe en Rmd, el código (junto con los packages aplicados) y cálculos intermedios de análisis. 
-* https://github.com/nboix95/DDS-Project
+
+* https://github.com/nboix95/DDS-Project.
 
 ## 2. Definición del conjunto de datos
-A la hora de definir el conjunto de datos, se han pensado qué tipo de información es interesante para determinar las propiedades de una página web. Esta se define en los siguientes puntos: 
+A la hora de definir el conjunto de datos, se ha pensado qué tipo de información es interesante para determinar las propiedades de una página web. Esta se define en los siguientes puntos: 
 
 - **Domain**: dominio del cual pertenecen. 
 - **Fecha**: fecha en el que se realizó el ataque.
-- **Categoría**: tipo de página web (venta de comida, ropa, automóviles...)
-- **IP**
-- **Proveedor**
+- **IP**: IP correspondiente a cada dominio.
+- **Proveedor**,**Tipología servidor** y **Autor dominio**: whois del dominio.
 - **Origen**: país de donde proceden.
-- **Tipología servidor**
-- **Autor dominio**
 
 ## 3. Determinación de los datos accesibles
 
@@ -49,10 +46,9 @@ Una vez se han definido los datos, se ha establecido una relación entre ellos, p
 
 Los objetivos principales son: 
 
-1. Relacionar el **grado** de **vulnerabilidad** de una **web** por su categoría. 
-2. Relacionar qué **países** son los más **atacados**, en cuanto a webs, en cada mes del año.
-3. Qué **proveedores** suelen ser los **más vulnerables**. 
-4. Establecer en qué **épocas del año** suelen haber **más phishings**.
+1. Relacionar qué **países** son los más **atacados**, en cuanto a webs.
+2. Qué **proveedores** suelen ser los **más vulnerables**. 
+3. Establecer en qué **épocas del año** suelen haber **más phishings**.
 
 ### 3.1 Obtención de los datos
 
@@ -67,6 +63,10 @@ stringr | Operaciones con diferentes tipologias de caracteres
 rgeolocate | Geolocalización de las IP's
 data.table | Modificar tablas de las bases de datos
 plyr | Dividir, aplicar y cambiar bases de datos
+ggplot2 | Creación de gráficos personalizados
+rlang | Tratar diferentes tipos de bases de datos
+plotly | Creación de gráficos interactivos
+
 
 ### 3.2 Datos elegantes
 
@@ -78,40 +78,35 @@ mundial.
 
 En el siguiente mapa de calor se muestra la densidad de dichas webs. Aparentemente los paises que tienen más webs atacadas son EEUU y Ásia:
 
-Figura 1 - Mapa de calor de webs vulneradas
+**Figura 1** - Mapa de calor de webs vulneradas
 
-imagen: ![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Mapa.png) 
+![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Mapa.png) 
 
-Se analizan cuales son los 10 paises que tienen más webs vulneradas. Para obtener esta relación se ha calculado la frecuencia de países.
-Como conclusión podemos afirmar que el país con más webs vulneradas, según la fuente de datos, es EEUU.
+Se analizan cuales son los 10 paises que tienen más webs vulneradas. Para obtener esta relación se ha calculado la frecuencia de estos. 
 
-Figura 2 - Vulnerabilidades por país
+**Figura 2** - Vulnerabilidades por país
 
-imagen: ![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Countriesfreq.png) 
+![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Countriesfreq.png) 
 
+Como conclusión se puede afirmar que el país con más webs vulneradas, según la fuente de datos, es EEUU.
 
 El siguiente paso es visualizar las época del año donde hay más ataques a webs.
 
-Figura 3 - Picos de ataques entre 2013 y 2018
+**Figura 3** - Picos de ataques entre 2013 y 2018
 
-imagen: ![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Periodo ataques.png) 
+![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Periodo ataques.png) 
 
-Figura 4 - Fechas coincidentes con la época de más ataques
+Como se observa, se distinguen 10 principales picos de máxima cantidad de ataques a webs. En el siguiente gráfico se muestra que a principios de año, Enero-Febrero, es donde más cantidad de webs son vulneradas. 
 
+**Figura 4** - Fechas coincidentes con la época de más ataques
 
-
+![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Picosfechas.png) 
 
 
 ## 5.Conclusiones
 
-Obtención de la respuesta a la pregunta: 
+Como conclusiones y obteniendo así la respuesta a la pregunta, se puede constatar que: 
 
-La relación de proveedores no se ha podido llevar a cabo ya que todas las opciones que se mostraban eran de pago (con el domaintools)
-
-
-## ANEXO
-## 6. Código
-
-```{r cars}
-summary(cars)
-```
+1. Los paises más propensos a ser vulnerados vía webs, son: EEUU, Alemania y Reino Unido. 
+2. En cuanto los proveedores que suelen ser los más vulnerables, no se ha podido analizar ya que todas las opciones que se han presentado son de pago. El package que ofrece una extensa información sobre el whois del dominio es: domaintools.
+3. Las épocas donde suelen tener más phishings son a principios años: entre Enero y Febrero.
