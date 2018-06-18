@@ -138,8 +138,7 @@ $(document).ready(function () {
 <li>Determinación de los datos accesibles</li>
 </ol>
 <ul>
-<li>3.1 Obtención de los datos</li>
-<li>3.2 Datos elegantes</li>
+<li>3.1 Obtención de los datos elegantes</li>
 </ul></li>
 <li><ol start="4" style="list-style-type: decimal">
 <li>Análisis de exploración de datos y gráficos</li>
@@ -154,7 +153,6 @@ $(document).ready(function () {
 <p>El objetivo de la práctica es evidenciar las posibles webs vulnerables respecto su orígen (país) y época del año.</p>
 <p>En este proyecto, se ha planteado como punto de partida, qué características son las principales para detectar que una web sea propensa a ser vulnerada.</p>
 <p>A partir de aquí, se han realizado varias búsquedas de bases de datos, hasta dar con la fuente de datos definitiva: <a href="http://www.malwaredomains.com/" class="uri">http://www.malwaredomains.com/</a>. En esta se han encontrado ficheros donde aparecen webs vulneradas en estos tres últimos años, la mayoría de ellas a causa de phishing. Para su análisis se ha tratado con en programa RStudio.</p>
-<p>Para la extracción de datos en esta página se ha utilizado el package…</p>
 <p>El repositorio que se ha utilizado para la descarga y modificación de datos y los cálculos pertinentes es el Github mediante el intermediario GitKraken.</p>
 <p>En este se encuentra: el informe en Rmd, el código (junto con los packages aplicados) y cálculos intermedios de análisis.</p>
 <ul>
@@ -181,8 +179,8 @@ $(document).ready(function () {
 <li>Qué <strong>proveedores</strong> suelen ser los <strong>más vulnerables</strong>.</li>
 <li>Establecer en qué <strong>épocas del año</strong> suelen haber <strong>más phishings</strong>.</li>
 </ol>
-<div id="obtencion-de-los-datos" class="section level3">
-<h3>3.1 Obtención de los datos</h3>
+<div id="obtencion-de-los-datos-elegantes" class="section level3">
+<h3>3.1 Obtención de los datos elegantes</h3>
 <p>A continuación, se describen los pasos que se han llevado a cabo para la obtención de los datos.</p>
 <p>En primer lugar, se han instalado las siguientes librerias:</p>
 <table>
@@ -227,9 +225,11 @@ $(document).ready(function () {
 </tr>
 </tbody>
 </table>
-</div>
-<div id="datos-elegantes" class="section level3">
-<h3>3.2 Datos elegantes</h3>
+<p>Posteriormente, se ha descargado la página web que contiene todos los enlaces a los archivos .txt que contienen los datos. Una vez descargada la página, era necesario extraer todos los enlaces que llevasen a archivos .txt con un formato determinado, así que se llevaron a cabo varios pases de regex con distintas cadenas para finalmente formar un vector de enlaces a los archivos que contienen los datos.</p>
+<p>Una vez generado el vector, se procedió a iterar sobre el mismo descargando cada archivo y metiendo cada línea en una línea del dataframe principal. Dado que los archivos eran texto plano con los campos separados por espacios, fué trivial parsear cada línea para separar los datos en las columnas adecadas.</p>
+<p>Fué necesario incluir más columnas de las necesarias ya que había ciertos archivos que tenían un mayor número de columnas.</p>
+<p>Una vez todos los enlaces fueron parseados y su información añadida al dataframe principal, se procedió al saneamiento de la información, eliminando columnas sobrantes o mal parseadas y descartando líneas que no cumplían con los criterios de información que eran necesarios para el proyecto.</p>
+<p>Teniendo así los datos ordenados, saneados y en un formato homogéneo, se pasó a iterar sobre el dataframe en busca de las IP’s relacionadas con cada uno de los dominios, añadiéndolas al dataframe en una nueva columna.</p>
 </div>
 </div>
 <div id="analisis-de-exploracion-de-datos-y-graficos" class="section level2">
