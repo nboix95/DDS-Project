@@ -145,9 +145,9 @@ barplot(prop.table(table(mainDataFrame$date)), main = "Histograma de ataques dia
 
 #10 primeros paises de maximas webs vulneradas 
 diezpaises <- subset(x, freq>100)
-diezpaises #se observa que Estados Unidos y Reino Unido son los países más afectados
+diezpaises #se observa que Estados Unidos y Reino Unido son los paises más afectados
 
-#geombar
+#Grafico que muestra la cantidad de webs vulneradas en los 10 primeros paises
 install.packages("rlang")
 library(rlang)
 install.packages("plotly")
@@ -160,4 +160,4 @@ p <- ggplot(data=diezpaises, aes(x=Countries, y=freq)) +
   geom_bar(stat="identity")
 
 p <- ggplotly(p)
-p #muestra gráfico
+p #muestra grafico
