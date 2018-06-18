@@ -40,3 +40,5 @@ vignettes/*.pdf
 
 # End of https://www.gitignore.io/api/r
 DownloadedData/
+
+countries_freq\.PNG
