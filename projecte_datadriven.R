@@ -5,7 +5,8 @@ install.packages("rgeolocate")
 install.packages("data.table")
 install.packages("plyr")
 install.packages("ggplot2")
-
+install.packages("rlang")
+install.packages("plotly")
 
 #Cargar las librerias necesarias
 library(iptools)
@@ -15,6 +16,8 @@ library(data.table)
 library(plyr)
 library(datasets)
 library(ggplot2)
+library(rlang)
+library(plotly)
 
 #Asignacion variables para working directory y DownloaodedData.
 mainDir <- getwd()
@@ -129,38 +132,12 @@ mapCountryData(sPDF,
 resultsIP<-na.omit(results)
 x = count(resultsIP, 'Countries')
 
-#Contar cuantas webs vulneradas hay por mes de cada año
-fechas=as.Date(mainDataFrame$date)
-Año <-format(fechas,"%Y%m")
-xtiempo <- as.data.frame(Año)
-dfyearmonth = count(xtiempo, "Año")
-
-#Contar frecuencia de tiempo (por día)
-tiempo = count(mainDataFrame, 'date')
-
-#Periodo ataques diarios
-barplot(prop.table(table(mainDataFrame$date)), main = "Periodo de ataques diarios 2013-2018", ylim = c(0,0.012))
-
-#Falta acabar
-diezfechas <- subset(tiempo, freq>810)
-diezfechas
-#p <- ggplot(data=diezpaises, aes(x=Countries, y=freq)) +
- # geom_bar(stat="identity")
-
-#p <- ggplotly(p)
-#p #muestra grafico
-
-
 #10 primeros paises de maximas webs vulneradas 
 diezpaises <- subset(x, freq>100)
 diezpaises #se observa que Estados Unidos y Reino Unido son los paises más afectados
 
 #Grafico que muestra la cantidad de webs vulneradas en los 10 primeros paises
-install.packages("rlang")
-library(rlang)
-install.packages("plotly")
-library(plotly)
-devtools::install_github('hadley/ggplot2')
+devtools::install_github('hadley/ggplot2') #necesario para instalar ggplot2
 
 .rs.restartR() #para restaurar la sesión
 
@@ -170,7 +147,19 @@ p <- ggplot(data=diezpaises, aes(x=Countries, y=freq)) +
 p <- ggplotly(p)
 p #muestra grafico
 
+#Contar cuantas webs vulneradas hay por mes de cada año
+fechas=as.Date(mainDataFrame$date)
+Año <-format(fechas,"%Y%m")
+xtiempo <- as.data.frame(Año)
+dfyearmonth = count(xtiempo, "Año")
 
+#Periodo ataques diarios
+barplot(prop.table(table(mainDataFrame$date)), main = "Periodo de ataques diarios 2013-2018", ylim = c(0,0.012))
 
+#Contar frecuencia de tiempo (por día)
+tiempo = count(mainDataFrame, 'date')
 
-
+#Fechas con más webs vulneradas
+diezfechas <- subset(tiempo, freq>810)
+diezfechas
+barplot(diezfechas$freq, names.arg = diezfechas$date, width = 0.6, main = "Picos máximos de ataques diarios 2013-2018", ylim = c(0,1500))
