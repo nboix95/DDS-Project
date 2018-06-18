@@ -138,10 +138,18 @@ dfyearmonth = count(xtiempo, "Año")
 #Contar frecuencia de tiempo (por día)
 tiempo = count(mainDataFrame, 'date')
 
-#tabla
-barplot(prop.table(table(mainDataFrame$date)), main = "Histograma de ataques diarios 2013-2018", ylim = c(0,0.012))
+#Periodo ataques diarios
+barplot(prop.table(table(mainDataFrame$date)), main = "Periodo de ataques diarios 2013-2018", ylim = c(0,0.012))
 
-#domaintools | extracción los proveedores de las IP's -> todas son de pago
+#Falta acabar
+diezfechas <- subset(tiempo, freq>810)
+diezfechas
+#p <- ggplot(data=diezpaises, aes(x=Countries, y=freq)) +
+ # geom_bar(stat="identity")
+
+#p <- ggplotly(p)
+#p #muestra grafico
+
 
 #10 primeros paises de maximas webs vulneradas 
 diezpaises <- subset(x, freq>100)
@@ -161,3 +169,8 @@ p <- ggplot(data=diezpaises, aes(x=Countries, y=freq)) +
 
 p <- ggplotly(p)
 p #muestra grafico
+
+
+
+
+

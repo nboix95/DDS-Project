@@ -76,15 +76,6 @@ plyr | Dividir, aplicar y cambiar bases de datos
 A continuación se analizan los países que más webs han sido vulneradas a nivel
 mundial.
 
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
 En el siguiente mapa de calor se muestra la densidad de dichas webs. Aparentemente los paises que tienen más webs atacadas son EEUU y Ásia:
 
 Figura 1 - Mapa de calor de webs vulneradas
@@ -92,20 +83,30 @@ Figura 1 - Mapa de calor de webs vulneradas
 imagen: ![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Mapa.png) 
 
 Se analizan cuales son los 10 paises que tienen más webs vulneradas. Para obtener esta relación se ha calculado la frecuencia de países.
-Como conclusión podemos afirmar que el país con más webs vulneradas, según la fuente de datos, es XXXX.
+Como conclusión podemos afirmar que el país con más webs vulneradas, según la fuente de datos, es EEUU.
 
 Figura 2 - Vulnerabilidades por país
+
+imagen: ![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Countriesfreq.png) 
 
 
 El siguiente paso es visualizar las época del año donde hay más ataques a webs.
 
-Figura 3 - Vulnerabilidades diarias
+Figura 3 - Picos de ataques entre 2013 y 2018
+
+imagen: ![](C:\Users\usuario\Desktop\MASTER\Data Driven Security\RStudio\DDS-Project\Periodo ataques.png) 
+
+Figura 4 - Fechas coincidentes con la época de más ataques
+
+
 
 
 
 ## 5.Conclusiones
 
-Obtención de la respuesta a la pregunta
+Obtención de la respuesta a la pregunta: 
+
+La relación de proveedores no se ha podido llevar a cabo ya que todas las opciones que se mostraban eran de pago (con el domaintools)
 
 
 ## ANEXO
