@@ -1,98 +1,176 @@
-#instala paquets necessaris
+#Instalacion paquetes necesarios.
 install.packages("iptools")
 install.packages("stringr")
+install.packages("rgeolocate")
+install.packages("data.table")
+install.packages("plyr")
+install.packages("ggplot2")
 
-#carrega les llibreries necessaries en el workspace
+
+#Cargar las librerias necesarias
 library(iptools)
 library(stringr)
+library(rgeolocate)
+library(data.table)
+library(plyr)
+library(datasets)
+library(ggplot2)
 
-#agafa el working directory i el fica a "mainDir" i el subdirectori DownloadedData a "subDir"
+#Asignacion variables para working directory y DownloaodedData.
 mainDir <- getwd()
 subDir <- "DownloadedData"
 
-#crea la carpeta downloadeddata al main directory, seteja el working directory a aquest i ho posa a la variable "downloadsdirectory"
-dir.create(file.path(mainDir, subDir))
-setwd(paste(mainDir,subDir, sep = '/'))
-downloadsDirectory <- getwd()
+dir.create(file.path(mainDir, subDir)) #creacion carpeta "DownloadedData" al main directory
+setwd(paste(mainDir,subDir, sep = '/')) #set del working directori de la carpeta
+downloadsDirectory <- getwd() #guardar en la variable downloadsDirectory
 
-#fica a "font" la URL base i la descarrega a "links"
-font <- "http://dns-bh.sagadc.org/"
-links <- readLines(font)
 
-#fica a "patro" una regex que detecta enllasos i els extreu a "links2"
-patro <- 'href=\\"([[:alnum:]\\.]*)'
-links2 <- str_extract(links,patro)
+fuente <- "http://dns-bh.sagadc.org/" #asignacion URL a la variable "fuente"
+links1 <- readLines(fuente) #lee cada linea de la "fuente" y la asigna a "links1".
 
-#treiem "href=\" dels links i els fiquem a links3
-links3 <- str_remove(links2,'href=\"')
+patron <- 'href=\\"([[:alnum:]\\.]*)' #regex para detectar enlaces
+links2 <- str_extract(links1,patron) #extraer el resultado en "links2".
 
-#iterem pels links de links3 i afegim la URL base per crear URL's completes (pero mal creades)
-#linksss <- sapply(links3, function(link){
-#  paste(font, link, sep="")
-#})
+links3 <- str_remove(links2,'href=\"') #eliminar "href=\" de links2 y guardar en links3
 
-#iterem pels links de links3 i afegim la URL base per crear URL's completes pero amb 2 barres (//)
-#linksss <- sapply(links3, function(link){
-#  paste(font, link, sep="/")
-#})
-
-#iterem pels links de links3 i afegim la URL base per crear URL's completes correctes
+#Iteracion para links3: añadir la URL base para que devuelva las URL's completas en formato correcto
 full_links <- sapply(links3, function(link){
-  paste(font, link, sep="")
+  paste(fuente, link, sep="")
 })
 
-#busquem el patro "txt" al vector full_links i creem un vector de "True" i "False"
+#Busqueda patron "txt" en el vector full_links, devolviendo un vector de "True/False"
 iters <- grepl(pattern = "txt", x = full_links)
 
-#fiquem a "full_links_filtered" els links que tenien un "txt"
+#Guardar los links con "txt" en la variable "full_links_filtered"
 full_links_filtered <- full_links[iters]
 
-#Treiem qualsevol link que tingui les paraules .zip
+#Eliminar links que contengan la extension "zip"
 any(grepl("zip", full_links_filtered))
 
-#iterem per "full_links_filtered" i descarreguem tots els arxius al working directory
+#Iteracion para descargar todos los archivos de "full_links_filtered" y guardarlos al working directory
 sapply(full_links_filtered, function(link) {
   download.file(url = link, destfile = paste(downloadsDirectory,basename(link),sep = "/") )
 })
 
-#esborrem arxius innecessaris
+#Borrar archivos innecesarios
 file.remove("test.txt")
 file.remove("freewebhosts.txt")
 file.remove("pushdo.txt")
 file.remove("domains.txt")
 
-#listem els arxius descarregats a "downloaded_files"
+#Listar archivos descargados a "downlodaded_files"
 downloaded_files <- list.files(downloadsDirectory)
 
-#inicialitzo "file2read" amb el primer arxiu de la llista
+#Guardar el primer archivo de downloaded_files en "file2read"
 file2read <- downloaded_files[[1]]
 
-#combina tots els arxius en un mateix dataframe en 7 columnes
+#Combina todos los archivos en un mismo dataframe (7 columnas)
 mainDataFrame <- do.call("rbind", lapply(downloaded_files, function(file2read){
   read.csv(file = paste(downloadsDirectory, file2read, sep = "/"), sep = "", header = F, fill = T, stringsAsFactors = F, col.names = c("domain", "type", "origin", "date", "1", "2", "3"))
 }))
 
-#Agafa la ultima columna NO N/A i la posa a Data
+#Coger la ultima columna (sin N/A) y la añade a Data Frame
 mainDataFrame$date <- apply(mainDataFrame, 1, function(x) tail(na.omit(x), 1))
 
-#defineix la columna de la data com a tipus data
+#Definir la columna del data frame como tipo data
 mainDataFrame$date <- as.Date(as.character(mainDataFrame$date), "%Y%m%d") 
 
-#Borra les columnes sobrants
+#Borrar las columnas restantes
 mainDataFrame[5:7] <- list(NULL)
 
-#Borra linies mal formatejades buscant un "origin" o una "data" buit
+#Borrar lineas mal formateadas buscando un "origin" o "dato" vacio
 mainDataFrame <- mainDataFrame[!(mainDataFrame$origin==""),]
 mainDataFrame <- mainDataFrame[!(is.na(mainDataFrame$date)),]
 
-#busca la IP del hostname cridant a la funcio hostname_to_ip amb la columna domain del dataframe
+#Buscar la IP del hostname (columna domain del dataframe) usando la función hostname_to_ip
 mainDataFrame$ip <- hostname_to_ip(mainDataFrame$domain)
 
-#deixa nomes la primera IP de cada domini si hi ha mes de una
+#En caso de que haya más de una IP, dejar la primera
 mainDataFrame$ip <- sapply(mainDataFrame$ip, '[[', 1)
 
-#guarda el dataframe a un arxiu local
+#Guardar el dataframe, en un archivo local
 save(mainDataFrame,file = "mainDataframe.Rda")
 
 testframe <- mainDataFrame[dim(mainDataFrame)[1]:1,]
 save(testframe, file = "testframe.Rda")
+
+
+#Sacar las filas que tengan IP not resolved y guardarlo en otro dataframe
+mainDataFrame1<- subset(mainDataFrame, ip != "Not resolved")
+
+#Crea un Data frame con todos los países de las IP's (rgeolocate)
+file <- system.file("extdata","GeoLite2-Country.mmdb", package = "rgeolocate")
+results <- maxmind(mainDataFrame1$ip, file, "country_name")
+
+#Renombramos la columna de country_name
+setnames(results, old="country_name", new="Countries")
+
+#Unimos data frame "results" con mainDataFrame1, siendo el resultado: mainDataFrameIP
+mainDataFrameIP = cbind(mainDataFrame1, results)
+View (mainDataFrameIP)
+
+#Eliminar filas con valor NA
+mainDFIP<-na.omit(mainDataFrameIP) #data frame mainDFIP: para el mapa
+
+#Mostrar en mapa las IP: rworldmap vignette
+library(rworldmap)
+par(mai=c(0,0,0.2,0), xaxs="i", yaxs="i")
+#Adjuntar los datos al country map
+sPDF<- joinCountryData2Map(mainDFIP,
+                          joinCode = "NAME",
+                          nameJoinColumn ="Countries")
+#mapping
+mapCountryData(sPDF, 
+               mapTitle = 'Country risk',
+               oceanCol = 'lightblue',
+               missingCountryCol = 'white')
+
+#Contar número de veces que se repite cada país
+resultsIP<-na.omit(results)
+x = count(resultsIP, 'Countries')
+
+#Contar cuantas webs vulneradas hay por mes de cada año
+fechas=as.Date(mainDataFrame$date)
+Año <-format(fechas,"%Y%m")
+xtiempo <- as.data.frame(Año)
+dfyearmonth = count(xtiempo, "Año")
+
+#Contar frecuencia de tiempo (por día)
+tiempo = count(mainDataFrame, 'date')
+
+#Periodo ataques diarios
+barplot(prop.table(table(mainDataFrame$date)), main = "Periodo de ataques diarios 2013-2018", ylim = c(0,0.012))
+
+#Falta acabar
+diezfechas <- subset(tiempo, freq>810)
+diezfechas
+#p <- ggplot(data=diezpaises, aes(x=Countries, y=freq)) +
+ # geom_bar(stat="identity")
+
+#p <- ggplotly(p)
+#p #muestra grafico
+
+
+#10 primeros paises de maximas webs vulneradas 
+diezpaises <- subset(x, freq>100)
+diezpaises #se observa que Estados Unidos y Reino Unido son los paises más afectados
+
+#Grafico que muestra la cantidad de webs vulneradas en los 10 primeros paises
+install.packages("rlang")
+library(rlang)
+install.packages("plotly")
+library(plotly)
+devtools::install_github('hadley/ggplot2')
+
+.rs.restartR() #para restaurar la sesión
+
+p <- ggplot(data=diezpaises, aes(x=Countries, y=freq)) +
+  geom_bar(stat="identity")
+
+p <- ggplotly(p)
+p #muestra grafico
+
+
+
+
+
